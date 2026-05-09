@@ -4,10 +4,12 @@ const db = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const verifyToken = require("./middleware/authMiddleware");
 const dotenv = require("dotenv");
+const userRoutes = require("./routes/userRoutes");
 
 dotenv.config();
 
 const app = express();
+app.use("/api/users", userRoutes);
 
 app.use(cors());
 app.use(express.json());
