@@ -24,6 +24,27 @@ app.get("/profile", verifyToken, (req, res) => {
     });
 });
 
+app.get("/stats", verifyToken, (req, res) => {
+
+    const usersQuery =
+        "SELECT COUNT(*) AS totalUsers FROM users";
+
+    db.query(usersQuery, (err, usersResult) => {
+
+        if (err) {
+            return res.status(500).json({
+                error: "Error obteniendo usuarios"
+            });
+        }
+
+        res.json({
+            totalUsers: usersResult[0].totalUsers
+        });
+
+    });
+
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
