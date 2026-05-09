@@ -2,6 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const db = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
+const verifyToken = require("./middleware/authMiddleware");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const app = express();
 
@@ -13,13 +17,20 @@ app.get("/", (req, res) => {
     res.send("Servidor funcionando 🚀");
 });
 
-const PORT = 3000;
+app.get("/profile", verifyToken, (req, res) => {
+    res.json({
+        message: "Ruta protegida",
+        user: req.user
+    });
+});
+
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en puerto ${PORT}`);
 });
 
-app.get("/users", (req, res) => {
+app.get("/users", verifyToken, (req, res) => {
     const query = "SELECT * FROM users";
 
     db.query(query, (err, results) => {
