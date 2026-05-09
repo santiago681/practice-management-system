@@ -58,7 +58,13 @@ fetch("http://localhost:3000/api/users", {
                 <td>${user.name}</td>
                 <td>${user.email}</td>
                 <td>${user.role}</td>
+                <td>
+                    <button onclick="deleteUser(${user.id})">
+                        Eliminar
+                    </button>
+                    </td>
             </tr>
+            
         `;
 
     });
@@ -77,3 +83,42 @@ logoutBtn.addEventListener("click", () => {
     window.location.href = "login.html";
 
 });
+
+async function deleteUser(id) {
+
+    const confirmDelete = confirm(
+        "¿Eliminar usuario?"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+
+        const response = await fetch(
+            `http://localhost:3000/api/users/${id}`,
+            {
+                method: "DELETE",
+
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(data.message);
+            location.reload();
+        } else {
+            alert(data.error || "Error al eliminar usuario");
+        }
+
+    } catch (error) {
+
+        console.log(error);
+        alert("Error del servidor");
+
+    }
+
+}
