@@ -3,7 +3,7 @@ const token = localStorage.getItem("token");
 if (!token) {
     window.location.href = "login.html";
 }
-
+let currentUserRole = "";
 const message = document.getElementById("message");
 
 fetch("http://localhost:3000/profile", {
@@ -11,11 +11,12 @@ fetch("http://localhost:3000/profile", {
     headers: {
         Authorization: `Bearer ${token}`
     }
-
+    
 })
 .then(response => response.json())
 .then(data => {
 
+    currentUserRole = data.user.role;
     message.innerText =
         `Bienvenido usuario con ID ${data.user.id}`;
 
@@ -59,17 +60,26 @@ fetch("http://localhost:3000/api/users", {
                 <td>${user.email}</td>
                 <td>${user.role}</td>
                 <td>
-                    <button onclick="openEditModal(
-                        ${user.id},
-                        '${user.name}',
-                        '${user.role}'
-                    )">
-                        Editar
-                    </button>
-                    <button onclick="deleteUser(${user.id})">
-                        Eliminar
-                    </button>
-                    </td>
+
+                    ${
+                        currentUserRole === "admin"
+                        ? `
+                            <button onclick="openEditModal(
+                                ${user.id},
+                                '${user.name}',
+                                '${user.role}'
+                            )">
+                                Editar
+                            </button>
+
+                            <button onclick="deleteUser(${user.id})">
+                                Eliminar
+                            </button>
+                    `
+                    : "Sin permisos"
+    }
+
+</td>
             </tr>
             
         `;
