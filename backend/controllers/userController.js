@@ -27,7 +27,24 @@ const deleteUser = (req, res) => {
 });
 };
     
+const updateUser = (req, res) => {
+    const { id } = req.params;
+
+    const { name, role } = req.body;
+
+    const query = "UPDATE users SET name = ?, role = ? WHERE id = ?";
+
+    db.query(query, [name, role, id], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: "Error al actualizar el usuario" });
+        }
+
+        res.json({ message: "Usuario actualizado correctamente" });
+    });
+};  
+
 module.exports = {
     getUsers,
-    deleteUser
+    deleteUser,
+    updateUser
 };
