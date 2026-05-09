@@ -9,11 +9,15 @@ const userRoutes = require("./routes/userRoutes");
 dotenv.config();
 
 const app = express();
-app.use("/api/users", userRoutes);
 
 app.use(cors());
 app.use(express.json());
+
+// Rutas públicas
 app.use("/api/auth", authRoutes);
+
+// Rutas protegidas
+app.use("/api/users", verifyToken, userRoutes);
 
 app.get("/", (req, res) => {
     res.send("Servidor funcionando 🚀");

@@ -38,6 +38,36 @@ fetch("http://localhost:3000/stats", {
     console.log(error);
 });
 
+fetch("http://localhost:3000/api/users", {
+
+    headers: {
+        Authorization: `Bearer ${token}`
+    }
+
+})
+.then(response => response.json())
+.then(users => {
+
+    const table = document.getElementById("usersTable");
+
+    users.forEach(user => {
+
+        table.innerHTML += `
+            <tr>
+                <td>${user.id}</td>
+                <td>${user.name}</td>
+                <td>${user.email}</td>
+                <td>${user.role}</td>
+            </tr>
+        `;
+
+    });
+
+})
+.catch(error => {
+    console.log(error);
+});
+
 const logoutBtn = document.getElementById("logoutBtn");
 
 logoutBtn.addEventListener("click", () => {
