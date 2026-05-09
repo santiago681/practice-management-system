@@ -10,15 +10,56 @@
 
 <body>
 
-    <div class="container">
+    <div class="dashboard">
 
-        <h2>Dashboard</h2>
+        <aside class="sidebar">
 
-        <p id="message"></p>
+            <h2>PMS</h2>
 
-        <button id="logoutBtn">
-            Cerrar sesión
-        </button>
+            <ul>
+                <li>Inicio</li>
+                <li>Usuarios</li>
+                <li>Empresas</li>
+            </ul>
+
+            <button id="logoutBtn">
+                Cerrar sesión
+            </button>
+
+        </aside>
+
+        <main class="main-content">
+
+            <h1>Dashboard</h1>
+
+            <div class="cards">
+
+                <div class="card">
+                    <h3>Usuarios</h3>
+                    <p id="totalUsers">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Empresas</h3>
+                    <p>15</p>
+                </div>
+
+                <div class="card">
+                    <h3>Prácticas</h3>
+                    <p>32</p>
+                </div>
+
+            </div>
+
+            <div class="table-container">
+
+                <h2>Información del usuario</h2>
+
+                <p id="message"></p>
+
+            </div>
+
+        </main>
 
     </div>
 

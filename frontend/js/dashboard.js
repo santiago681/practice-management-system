@@ -24,6 +24,19 @@ fetch("http://localhost:3000/profile", {
     console.log(error);
 });
 
+fetch("http://localhost:3000/stats", {
+    headers: {
+        Authorization: `Bearer ${token}`
+    }
+})
+.then(response => response.json())
+.then(data => {
+
+    document.getElementById("totalUsers").innerText = data.totalUsers;
+})
+.catch(error => {
+    console.log(error);
+});
 
 const logoutBtn = document.getElementById("logoutBtn");
 
