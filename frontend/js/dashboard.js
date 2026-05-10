@@ -6,7 +6,7 @@ if (!token) {
 let currentUserRole = "";
 const message = document.getElementById("message");
 
-fetch("http://localhost:3000/profile", {
+fetch("https://practice-management-system.onrender.com/profile", {
 
     headers: {
         Authorization: `Bearer ${token}`
@@ -25,7 +25,7 @@ fetch("http://localhost:3000/profile", {
     console.log(error);
 });
 
-fetch("http://localhost:3000/stats", {
+fetch("https://practice-management-system.onrender.com/stats", {
     headers: {
         Authorization: `Bearer ${token}`
     }
@@ -39,7 +39,7 @@ fetch("http://localhost:3000/stats", {
     console.log(error);
 });
 
-fetch("http://localhost:3000/api/users", {
+fetch("https://practice-management-system.onrender.com/api/users", {
 
     headers: {
         Authorization: `Bearer ${token}`
@@ -112,7 +112,7 @@ async function deleteUser(id) {
     try {
 
         const response = await fetch(
-            `http://localhost:3000/api/users/${id}`,
+            `https://practice-management-system.onrender.com/api/users/${id}`,
             {
                 method: "DELETE",
 
@@ -158,7 +158,7 @@ function openEditModal(id, name, role) {
 saveBtn.addEventListener("click", async () => {
     try {
         const response = await fetch(   
-            `http://localhost:3000/api/users/${selectedUserId}`,
+            `https://practice-management-system.onrender.com/api/users/${selectedUserId}`,
             {
                 method: "PUT",
 
