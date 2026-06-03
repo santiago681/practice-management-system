@@ -6,6 +6,7 @@ const verifyToken = require("./middleware/authMiddleware");
 const dotenv = require("dotenv");
 const userRoutes = require("./routes/userRoutes");
 const companyRoutes = require("./routes/companyRoutes");
+const internshipRoutes = require("./routes/internshipRoutes");
 dotenv.config();
 
 const app = express();
@@ -18,7 +19,8 @@ app.use("/api/auth", authRoutes);
 
 // Rutas protegidas
 app.use("/api/users", verifyToken, userRoutes);
-app.use("/api/companies", companyRoutes);
+app.use("/api/companies", verifyToken, companyRoutes);
+app.use("/api/internships", verifyToken, internshipRoutes);
 
 app.get("/", (req, res) => {
     res.send("Servidor funcionando 🚀");
