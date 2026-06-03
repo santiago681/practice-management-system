@@ -9,7 +9,7 @@ loginBtn.addEventListener("click", async () => {
     try {
 
         const response = await fetch(
-            "https://practice-management-system.onrender.com/api/auth/login",
+            "http://localhost:3000/api/auth/login",
             {
                 method: "POST",
 

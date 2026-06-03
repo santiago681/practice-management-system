@@ -1,187 +1,115 @@
 const token = localStorage.getItem("token");
 
+// Verificar si existe token
 if (!token) {
     window.location.href = "login.html";
 }
-let currentUserRole = "";
-const message = document.getElementById("message");
 
-fetch("https://practice-management-system.onrender.com/profile", {
-
-    headers: {
-        Authorization: `Bearer ${token}`
-    }
-    
-})
-.then(response => response.json())
-.then(data => {
-
-    currentUserRole = data.user.role;
-    message.innerText =
-        `Bienvenido usuario con ID ${data.user.id}`;
-
-})
-.catch(error => {
-    console.log(error);
-});
-
-fetch("https://practice-management-system.onrender.com/stats", {
+// Obtener estadísticas
+fetch("http://localhost:3000/profile", {
     headers: {
         Authorization: `Bearer ${token}`
     }
 })
-.then(response => response.json())
-.then(data => {
+.then((response) => {
+
+    if (!response.ok) {
+        throw new Error("Error getting stats");
+    }
+
+    return response.json();
+})
+.then((data) => {
 
     document.getElementById("totalUsers").innerText = data.totalUsers;
+
 })
-.catch(error => {
-    console.log(error);
+.catch((error) => {
+    console.log("Stats error:", error);
 });
 
-fetch("https://practice-management-system.onrender.com/api/users", {
-
+// Obtener usuarios
+fetch("http://localhost:3000/api/users", {
     headers: {
         Authorization: `Bearer ${token}`
     }
-
 })
-.then(response => response.json())
-.then(users => {
+.then((response) => {
 
-    const table = document.getElementById("usersTable");
+    if (!response.ok) {
+        throw new Error("Error getting users");
+    }
 
-    users.forEach(user => {
+    return response.json();
+})
+.then((users) => {
 
-        table.innerHTML += `
+    const tableBody = document.getElementById("usersTableBody");
+
+    tableBody.innerHTML = "";
+
+    users.forEach((user) => {
+
+        const row = `
             <tr>
                 <td>${user.id}</td>
                 <td>${user.name}</td>
                 <td>${user.email}</td>
-                <td>${user.role}</td>
                 <td>
-
-                    ${
-                        currentUserRole === "admin"
-                        ? `
-                            <button onclick="openEditModal(
-                                ${user.id},
-                                '${user.name}',
-                                '${user.role}'
-                            )">
-                                Editar
-                            </button>
-
-                            <button onclick="deleteUser(${user.id})">
-                                Eliminar
-                            </button>
-                    `
-                    : "Sin permisos"
-    }
-
-</td>
+                    <button onclick="deleteUser(${user.id})">
+                        Eliminar
+                    </button>
+                </td>
             </tr>
-            
         `;
 
+        tableBody.innerHTML += row;
     });
 
 })
-.catch(error => {
-    console.log(error);
+.catch((error) => {
+    console.log("Users error:", error);
 });
 
-const logoutBtn = document.getElementById("logoutBtn");
+// Eliminar usuario
+function deleteUser(id) {
 
-logoutBtn.addEventListener("click", () => {
+    const confirmDelete = confirm("¿Deseas eliminar este usuario?");
+
+    if (!confirmDelete) {
+        return;
+    }
+
+    fetch(`http://localhost:3000/api/users/${id}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    .then((response) => {
+
+        if (!response.ok) {
+            throw new Error("Error deleting user");
+        }
+
+        return response.json();
+    })
+    .then((data) => {
+
+        alert(data.message);
+
+        location.reload();
+
+    })
+    .catch((error) => {
+        console.log("Delete error:", error);
+    });
+}
+
+// Logout
+function logout() {
 
     localStorage.removeItem("token");
 
     window.location.href = "login.html";
-
-});
-
-async function deleteUser(id) {
-
-    const confirmDelete = confirm(
-        "¿Eliminar usuario?"
-    );
-
-    if (!confirmDelete) return;
-
-    try {
-
-        const response = await fetch(
-            `https://practice-management-system.onrender.com/api/users/${id}`,
-            {
-                method: "DELETE",
-
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
-        );
-
-        const data = await response.json();
-
-        if (response.ok) {
-            alert(data.message);
-            location.reload();
-        } else {
-            alert(data.error || "Error al eliminar usuario");
-        }
-
-    } catch (error) {
-
-        console.log(error);
-        alert("Error del servidor");
-
-    }
-
 }
-
-const modal = document.getElementById("editModal");
-const editName = document.getElementById("editName");
-const editRole = document.getElementById("editRole");
-const saveBtn = document.getElementById("saveBtn");
-
-let selectedUserId = null;
-
-function openEditModal(id, name, role) {
-    selectedUserId = id;
-    editName.value = name;
-    editRole.value = role;
-
-    modal.style.display = "flex";
-}
-
-saveBtn.addEventListener("click", async () => {
-    try {
-        const response = await fetch(   
-            `https://practice-management-system.onrender.com/api/users/${selectedUserId}`,
-            {
-                method: "PUT",
-
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-
-                body: JSON.stringify({
-                    name: editName.value,
-                    role: editRole.value
-                })
-            }
-        );
-
-        const data = await response.json();
-
-        alert(data.message || "Usuario actualizado");
-
-        modal.style.display = "none";
-        location.reload();
-    } catch (error) {
-        console.log(error);
-        alert("Error al actualizar usuario");
-    }
-});

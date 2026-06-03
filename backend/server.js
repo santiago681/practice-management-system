@@ -10,7 +10,7 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 // Rutas públicas
@@ -51,7 +51,7 @@ app.get("/stats", verifyToken, (req, res) => {
 
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT =  3000;
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en puerto ${PORT}`);
