@@ -6,7 +6,7 @@ if (!token) {
 }
 
 // Obtener estadísticas
-fetch("http://localhost:3000/profile", {
+fetch("http://localhost:3000/stats", {
     headers: {
         Authorization: `Bearer ${token}`
     }
@@ -20,7 +20,8 @@ fetch("http://localhost:3000/profile", {
     return response.json();
 })
 .then((data) => {
-
+    document.getElementById("welcomeName").innerText = `Bienvenido, ${data.user.name}`;
+    document.getElementById("welcomeRole").innerText = `Rol: ${data.user.role}`;
     document.getElementById("totalUsers").innerText = data.totalUsers;
 
 })
@@ -55,7 +56,17 @@ fetch("http://localhost:3000/api/users", {
                 <td>${user.id}</td>
                 <td>${user.name}</td>
                 <td>${user.email}</td>
+                <td>${user.role}</td>
                 <td>
+
+                    <button onclick="openEditModal(
+                        ${user.id},
+                        '${user.name}',
+                        '${user.role}'
+                    )">
+                        Editar
+                    </button>
+
                     <button onclick="deleteUser(${user.id})">
                         Eliminar
                     </button>
