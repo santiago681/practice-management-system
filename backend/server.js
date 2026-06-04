@@ -7,6 +7,7 @@ const dotenv = require("dotenv");
 const userRoutes = require("./routes/userRoutes");
 const companyRoutes = require("./routes/companyRoutes");
 const internshipRoutes = require("./routes/internshipRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 dotenv.config();
 
 const app = express();
@@ -21,7 +22,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", verifyToken, userRoutes);
 app.use("/api/companies", verifyToken, companyRoutes);
 app.use("/api/internships", verifyToken, internshipRoutes);
-
+app.use("/api/dashboard", verifyToken, dashboardRoutes);
 app.get("/", (req, res) => {
     res.send("Servidor funcionando 🚀");
 });

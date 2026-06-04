@@ -5,8 +5,27 @@ if (!token) {
     window.location.href = "login.html";
 }
 
+fetch("http://localhost:3000/profile", {
+    headers: {
+        Authorization: `Bearer ${token}`
+    }
+})
+.then((response) => {
+    if (!response.ok) {
+        throw new Error("Error getting profile");
+    }
+    return response.json();
+})
+.then((data) => {
+    document.getElementById("welcomeName").innerText = `Bienvenido`;
+    document.getElementById("welcomeRole").innerText = `Rol: ${data.user.role}`;
+})
+.catch((error) => {
+    console.log(error);
+});
+
 // Obtener estadísticas
-fetch("http://localhost:3000/stats", {
+fetch("http://localhost:3000/api/dashboard/stats", {
     headers: {
         Authorization: `Bearer ${token}`
     }
@@ -20,10 +39,10 @@ fetch("http://localhost:3000/stats", {
     return response.json();
 })
 .then((data) => {
-    document.getElementById("welcomeName").innerText = `Bienvenido, ${data.user.name}`;
-    document.getElementById("welcomeRole").innerText = `Rol: ${data.user.role}`;
     document.getElementById("totalUsers").innerText = data.totalUsers;
-
+    document.getElementById("totalCompanies").innerText = data.totalCompanies;
+    document.getElementById("totalInternships").innerText = data.totalInternships;
+    
 })
 .catch((error) => {
     console.log("Stats error:", error);
